@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>캠프연구소 | BigLinker</title>
+<meta name="description" content="캠프연구소 — 가족 영어캠프, 스쿨링, 액티비티, 의약대·대학 진로 캠프까지 분야별로 비교하고 고르는 캠프 안내">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: yellow search band with "who is it for" tiles, sticky filter bar, card grid, slide-up compare tray. Single brand look (BigLinker yellow / ink / paper). */
+:root{
+  --yellow:#F2C230;
+  --yellow-soft:#FBEBB0;
+  --ink:#151515;
+  --paper:#F6F3EA;
+  --white:#FFFFFF;
+  --muted:#5B574E;
+  --line:#D9D4C7;
+  --rule:#5A574F;
+  --green:#2F6B4F;
+  --display:'Archivo Black','Arial Black',sans-serif;
+  --body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;word-break:keep-all}
+[hidden]{display:none!important}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.in{max-width:1120px;margin:0 auto}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:0.12em;margin:0}
+
+/* header */
+.top{background:var(--ink);color:var(--paper)}
+.top .in{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:56px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand b{font-family:var(--display);font-weight:400;font-size:18px;color:var(--yellow)}
+.brand span{font-weight:700;font-size:15px}
+.top a{color:var(--paper);font-size:14px;font-weight:700;text-decoration:none;padding:10px 0}
+.top a:hover{text-decoration:underline;text-underline-offset:4px}
+
+/* hero */
+.hero{background:var(--yellow);padding-block:36px 40px}
+.hero h1{margin:8px 0 10px;font-size:clamp(30px,6vw,52px);font-weight:900;line-height:1.15;text-wrap:balance}
+.hero p.sub{margin:0 0 24px;font-size:17px;max-width:640px;font-weight:500}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.quick button{background:var(--white);border:2px solid var(--ink);padding:14px 16px;text-align:left;display:flex;flex-direction:column;gap:4px;min-height:84px}
+.quick button:hover{background:var(--paper)}
+.quick button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.quick button[aria-pressed="true"] small{color:var(--yellow)}
+.quick b{font-size:16px;line-height:1.3}
+.quick small{font-size:13px;color:var(--muted);line-height:1.4}
+@media (max-width:820px){.quick{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.quick{grid-template-columns:1fr}}
+
+/* filter bar */
+.filters{background:var(--paper);border-bottom:2px solid var(--ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.filters .in{display:flex;flex-direction:column;gap:10px;padding-block:14px}
+@media (max-width:760px),(max-height:700px){.filters{position:static}}
+.frow{display:flex;gap:8px;align-items:center;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.frow::-webkit-scrollbar{display:none}
+.frow .k{flex:0 0 auto;font-size:13px;font-weight:700;color:var(--muted);min-width:52px}
+.chip{flex:0 0 auto;min-height:38px;padding:0 14px;border:1.5px solid var(--ink);background:var(--white);font-size:14px;font-weight:500;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.fmeta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
+.fmeta strong{font-family:var(--display);font-weight:400;font-size:18px}
+.reset{background:none;border:0;text-decoration:underline;text-underline-offset:3px;font-size:14px;padding:8px 0;min-height:38px}
+.sort{font:inherit;font-size:14px;border:1.5px solid var(--ink);background:var(--white);min-height:38px;padding:0 10px;border-radius:0}
+
+/* notice */
+.notice{background:var(--yellow-soft);border-left:0;padding:12px 16px;font-size:14px;margin:20px 0 0}
+
+/* grid */
+.list{padding-block:20px 140px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:20px}
+@media (max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.grid{grid-template-columns:1fr}}
+.card{background:var(--white);border:1.5px solid var(--ink);display:flex;flex-direction:column;min-width:0}
+.card .head{padding:16px 18px 12px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;font-weight:700;padding:3px 8px;background:var(--paper)}
+.tag.cat{background:var(--ink);color:var(--paper)}
+.tag.fam{background:var(--yellow)}
+.card h3{margin:0;font-size:18px;line-height:1.35;font-weight:900}
+.card .place{font-size:14px;color:var(--muted)}
+.card .body{padding:12px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;margin:0}
+.facts dt{color:var(--muted);font-weight:500}
+.facts dd{margin:0;font-weight:500}
+.mix{display:flex;flex-direction:column;gap:4px}
+.mix .lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:700}
+.bar{display:flex;height:8px;background:var(--paper)}
+.bar i{display:block;height:100%;background:var(--ink)}
+.bar i+i{background:var(--yellow)}
+.card p.sum{margin:0;font-size:14px;line-height:1.55}
+details{font-size:14px;border-top:1px solid var(--line);padding-top:8px}
+summary{cursor:pointer;font-weight:700;min-height:32px;display:flex;align-items:center}
+details ul{margin:6px 0 0;padding-left:18px}
+.card .foot{display:flex;gap:8px;padding:12px 18px 16px;flex-wrap:wrap}
+.btn{min-height:44px;padding:0 16px;font-size:14px;font-weight:700;border:1.5px solid var(--ink);background:var(--white);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink)}
+.btn.dark{background:var(--ink);color:var(--paper)}
+.btn[aria-pressed="true"]{background:var(--yellow)}
+.empty{grid-column:1/-1;background:var(--white);border:1.5px dashed var(--ink);padding:32px;text-align:center}
+
+/* compare tray */
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--ink);color:var(--paper);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tray .in{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;padding-block:10px;flex-wrap:wrap}
+.tray .sel{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;min-width:0}
+.tray .sel span{background:#2A2A2A;padding:4px 8px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tray .btn{border-color:var(--yellow)}
+.tray .go{background:var(--yellow);color:var(--ink)}
+.tray .clear{background:transparent;color:var(--paper);border-color:var(--rule)}
+
+/* compare sheet */
+.sheet{position:fixed;inset:0;z-index:30;background:rgba(21,21,21,.55);display:flex;align-items:flex-end;justify-content:center}
+.sheet .panel{background:var(--paper);width:100%;max-width:1120px;max-height:88vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet .bar-top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:2px solid var(--ink)}
+.sheet h2{margin:0;font-size:20px;font-weight:900}
+.sheet .scroll{overflow:auto;padding:12px 16px 20px}
+table.cmp{border-collapse:collapse;width:100%;min-width:560px;background:var(--white);font-size:14px}
+.cmp th,.cmp td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+.cmp thead th{background:var(--ink);color:var(--paper);font-weight:700;position:sticky;top:0}
+.cmp tbody th{background:var(--paper);font-weight:700;white-space:nowrap;width:110px}
+.close{min-width:44px;min-height:44px;border:1.5px solid var(--ink);background:var(--white);font-size:20px;line-height:1}
+
+/* how / contact */
+.how{background:var(--white);border-top:2px solid var(--ink);padding-block:48px}
+.how h2,.contact h2{margin:6px 0 18px;font-size:clamp(24px,4vw,34px);font-weight:900}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;counter-reset:s}
+.steps div{border-top:4px solid var(--ink);padding-top:10px}
+.steps b{font-family:var(--display);font-weight:400;font-size:24px}
+.steps h3{margin:4px 0;font-size:16px}
+.steps p{margin:0;font-size:14px;color:var(--muted)}
+@media (max-width:760px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.contact{background:var(--ink);color:var(--paper);padding-block:48px 56px}
+.contact h2{color:var(--yellow)}
+.cgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cbox{border:1.5px solid var(--rule);padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.cbox .l{font-size:12px;font-weight:700;color:var(--yellow);letter-spacing:0.08em}
+.cbox .v{font-size:17px;font-weight:700;word-break:break-all;user-select:all}
+.cbox button{align-self:flex-start;min-height:40px;padding:0 14px;background:var(--yellow);color:var(--ink);border:0;font-weight:700;font-size:14px}
+@media (max-width:760px){.cgrid{grid-template-columns:1fr}}
+.contact .partner{margin-top:24px;font-size:14px;color:#D6D2C8}
+.contact .partner a{color:var(--yellow)}
+</style>
+</head>
+<body>
+
+<header class="top band">
+  <div class="in">
+    <div class="brand"><b>BigLinker</b><span>캠프연구소</span></div>
+    <a href="#contact">상담 신청</a>
+  </div>
+</header>
+
+<main>
+<section class="hero band" aria-labelledby="h1">
+  <div class="in">
+    <p class="eyebrow">CAMP LAB · 캠프연구소</p>
+    <h1 id="h1">우리 아이에게 맞는 캠프,<br>분야별로 비교하고 고르세요</h1>
+    <p class="sub">가족이 함께 가는 영어캠프부터 현지 학교 스쿨링, 액티비티 캠프, 의약대·대학 진로 캠프까지. 원하는 조건을 고르면 맞는 캠프만 보여드리고, 최대 3개까지 나란히 비교할 수 있습니다.</p>
+    <p class="eyebrow" style="margin-bottom:10px">누구를 위한 캠프를 찾으세요?</p>
+    <div class="quick" id="quick" role="group" aria-label="빠른 찾기">
+      <button type="button" data-preset="family" aria-pressed="false"><b>엄마·아빠와 함께 가는 영어캠프</b><small>부모 동반 · 초등 중심 · 부모 숙소/프로그램 포함</small></button>
+      <button type="button" data-preset="schooling" aria-pressed="false"><b>현지 학교 다녀보기 (스쿨링)</b><small>현지 학교 정규 수업 참여 · 2주 이상</small></button>
+      <button type="button" data-preset="activity" aria-pressed="false"><b>뛰어놀며 배우는 액티비티 캠프</b><small>스포츠 · 자연 · 체험 비중이 높은 캠프</small></button>
+      <button type="button" data-preset="career" aria-pressed="false"><b>의대·약대 등 진로 탐색 캠프</b><small>중·고등 · 대학 강의와 실습 체험</small></button>
+      <button type="button" data-preset="academic" aria-pressed="false"><b>해외 대학 서머스쿨</b><small>고등·대학생 · 대학 캠퍼스 학술 과정</small></button>
+      <button type="button" data-preset="stem" aria-pressed="false"><b>AI·코딩·STEM 캠프</b><small>만들고 실험하는 프로젝트형</small></button>
+    </div>
+  </div>
+</section>
+
+<div class="filters band" id="filters">
+  <div class="in">
+    <div class="frow" role="group" aria-label="분야"><span class="k">분야</span><span id="f-cat"></span></div>
+    <div class="frow" role="group" aria-label="대상"><span class="k">대상</span><span id="f-age"></span></div>
+    <div class="frow" role="group" aria-label="동반"><span class="k">동반</span><span id="f-with"></span></div>
+    <div class="frow" role="group" aria-label="기간"><span class="k">기간</span><span id="f-dur"></span></div>
+    <div class="frow" role="group" aria-label="지역"><span class="k">지역</span><span id="f-reg"></span></div>
+    <div class="fmeta">
+      <span><strong id="count">0</strong> 개 캠프</span>
+      <span style="display:flex;gap:12px;align-items:center">
+        <label for="sort" class="k" style="font-size:13px;font-weight:700;color:var(--muted)">정렬</label>
+        <select id="sort" class="sort">
+          <option value="rec">추천순</option>
+          <option value="short">기간 짧은순</option>
+          <option value="cost">비용 낮은순</option>
+          <option value="study">학습 비중 높은순</option>
+          <option value="act">활동 비중 높은순</option>
+        </select>
+        <button type="button" class="reset" id="reset">조건 초기화</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<section class="list band" aria-label="캠프 목록">
+  <div class="in">
+    <p class="notice"><b>안내</b> · 지금 보이는 캠프는 <b>분류와 비교 방식을 보여드리기 위한 예시</b>입니다. 실제 운영 일정·비용·기관명은 파트너 등록 후 순차적으로 공개되며, 상담 시 최신 정보로 안내드립니다.</p>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="how band" aria-labelledby="how-t">
+  <div class="in">
+    <p class="eyebrow">HOW IT WORKS</p>
+    <h2 id="how-t">캠프연구소는 이렇게 도와드립니다</h2>
+    <div class="steps">
+      <div><b>01</b><h3>무료 상담</h3><p>아이 나이, 영어 수준, 원하는 시기와 예산을 여쭤봅니다.</p></div>
+      <div><b>02</b><h3>맞춤 추천</h3><p>조건에 맞는 캠프 2~3개를 비교표로 정리해 드립니다.</p></div>
+      <div><b>03</b><h3>등록·출국 준비</h3><p>신청서, 서류, 보험, 출국 전 오리엔테이션까지 챙깁니다.</p></div>
+      <div><b>04</b><h3>캠프 중·후 관리</h3><p>현지와 연락을 유지하고, 다녀온 뒤 다음 단계를 함께 고민합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact band" id="contact" aria-labelledby="ct">
+  <div class="in">
+    <p class="eyebrow" style="color:var(--yellow)">CONTACT</p>
+    <h2 id="ct">캠프 상담 신청</h2>
+    <p style="margin:0 0 20px;max-width:640px">비교함에 담은 캠프 이름과 아이 학년을 함께 알려주시면 더 빠르게 안내해 드립니다.</p>
+    <div class="cgrid">
+      <div class="cbox"><span class="l">전화</span><span class="v" id="c-tel">02-2039-8584</span><button type="button" data-copy="c-tel">복사</button></div>
+      <div class="cbox"><span class="l">이메일</span><span class="v" id="c-mail">biglinkerkor@gmail.com</span><button type="button" data-copy="c-mail">복사</button></div>
+      <div class="cbox"><span class="l">카카오톡</span><span class="v">빅링커 채널에서 ‘캠프 상담’</span></div>
+    </div>
+    <p class="partner">해외 캠프 운영 기관이신가요? 캠프연구소에 프로그램을 등록하시면 한국어로 소개하고 모집해 드립니다. 수수료는 실제 등록 학생에 대해서만 발생합니다. · <a href="../">BigLinker Camps (English)</a></p>
+  </div>
+</section>
+</main>
+
+<div class="tray" id="tray" hidden>
+  <div class="in band" style="padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))">
+    <div class="sel" id="tray-sel"></div>
+    <div style="display:flex;gap:8px">
+      <button type="button" class="btn clear" id="tray-clear">비우기</button>
+      <button type="button" class="btn go" id="tray-go">비교하기</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="cmp-t">
+  <div class="panel">
+    <div class="bar-top"><h2 id="cmp-t">캠프 비교</h2><button type="button" class="close" id="sheet-close" aria-label="비교 닫기">×</button></div>
+    <div class="scroll" id="cmp"></div>
+  </div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   캠프 데이터 — 여기만 고치면 목록·필터·비교표가 자동으로 바뀝니다.
+   cat   : 분야 (CATS의 key 중 하나 이상)
+   age   : 대상 (AGES의 key 중 하나 이상)
+   with  : 'parent' (부모 동반) 또는 'solo' (아이 혼자)
+   weeks : 기간(주)            region : REGIONS의 key
+   cost  : 1(300만원 미만) · 2(300~600만원) · 3(600만원 이상)
+   study : 학습 비중(%)  — 나머지는 활동 비중으로 표시
+   ※ 아래는 모두 '예시' 데이터입니다. 실제 프로그램으로 교체하세요.
+   ───────────────────────────────────────────────────────────── */
+var CAMPS = [
+ {id:'c1', title:'가족 동반 영어캠프 (엄마·아빠 숙소 포함)', place:'필리핀 세부', region:'sea', cat:['english','family'], age:['el1','el2'], with:'parent', weeks:3, cost:2, study:60, stay:'리조트형 가족 숙소', ratio:'1:1 + 소그룹', korean:'한국인 매니저 상주', summary:'아이는 오전 1:1·소그룹 영어 수업, 오후 체험 활동. 부모님은 같은 숙소에 머물며 원하면 성인 영어 수업도 들을 수 있습니다.', incl:['아이 영어 수업(주 5일)','부모 숙소·식사','주말 액티비티','공항 픽업']},
+ {id:'c2', title:'말레이시아 국제학교 스쿨링 + 부모 동반', place:'말레이시아 조호바루', region:'sea', cat:['schooling','family'], age:['el1','el2','ms'], with:'parent', weeks:4, cost:3, study:75, stay:'콘도 (가족 단위)', ratio:'현지 학급 배정', korean:'현지 한국인 코디', summary:'국제학교 정규 수업에 현지 학생들과 함께 참여합니다. 부모님은 인근 콘도에 머물며 등하교를 함께합니다.', incl:['국제학교 수업료','레벨 테스트','콘도 숙박','현지 생활 지원']},
+ {id:'c3', title:'뉴질랜드 초등 스쿨링 (홈스테이)', place:'뉴질랜드 오클랜드', region:'oce', cat:['schooling'], age:['el2','ms'], with:'solo', weeks:6, cost:3, study:70, stay:'홈스테이', ratio:'현지 학급 배정', korean:'인솔 교사 동행', summary:'현지 초등학교에 등교하며 홈스테이 가정에서 생활합니다. 영어 환경에 완전히 들어가 보는 경험입니다.', incl:['현지 학교 등록','홈스테이(식사 포함)','인솔 교사','주말 투어']},
+ {id:'c4', title:'영국 기숙학교 여름 영어 & 액티비티', place:'영국 잉글랜드', region:'uk', cat:['english','activity'], age:['el2','ms'], with:'solo', weeks:2, cost:3, study:50, stay:'기숙사', ratio:'국제 학생 혼합 반', korean:'한국인 인솔자', summary:'오전 영어 수업, 오후 스포츠·아트, 주말 런던·옥스퍼드 견학. 여러 나라 친구들과 기숙사 생활을 합니다.', incl:['영어 수업','기숙사·식사','주말 견학 2회','공항 이동']},
+ {id:'c5', title:'캐나다 자연 액티비티 캠프', place:'캐나다 온타리오', region:'na', cat:['activity'], age:['el2','ms'], with:'solo', weeks:2, cost:2, study:20, stay:'캠프장 캐빈', ratio:'카운슬러 1:6', korean:'인솔자 동행', summary:'카누, 하이킹, 캠프파이어 등 자연 속 활동 중심. 영어로 생활하며 자신감을 키우는 데 초점을 둡니다.', incl:['캠프 프로그램','캐빈 숙박·식사','안전 장비','인솔']},
+ {id:'c6', title:'국내 영어 몰입 캠프 (주말 가족 데이 포함)', place:'대한민국 제주', region:'kr', cat:['english','activity','family'], age:['el1','el2'], with:'parent', weeks:1, cost:1, study:55, stay:'리조트', ratio:'원어민 강사 소그룹', korean:'한국인 스태프', summary:'출국 부담 없이 원어민 강사와 영어로 생활하는 1주 캠프. 마지막 날은 부모님과 함께하는 발표회가 있습니다.', incl:['원어민 수업','숙박·식사','가족 발표회','여행자 보험']},
+ {id:'c7', title:'영국 의대 진로 체험 캠프', place:'영국 런던', region:'uk', cat:['career'], age:['ms','hs'], with:'solo', weeks:1, cost:3, study:80, stay:'대학 기숙사', ratio:'소그룹 세미나', korean:'인솔자 동행', summary:'의대 강의, 임상 술기 실습(시뮬레이션), 현직 의사 멘토링으로 의대 진학을 미리 경험합니다.', incl:['강의·실습','기숙사·식사','수료증','인솔']},
+ {id:'c8', title:'약대·생명과학 연구실 체험', place:'유럽 (국가 협의 중)', region:'eu', cat:['career','stem'], age:['hs'], with:'solo', weeks:2, cost:3, study:85, stay:'대학 기숙사', ratio:'연구실 소그룹', korean:'인솔자 동행', summary:'약학·생명과학 실험실에서 기초 실험을 직접 해보고 연구 발표까지 진행합니다.', incl:['실험·강의','기숙사','연구 발표','수료증']},
+ {id:'c9', title:'영국 대학 서머스쿨 (학점 연계형)', place:'영국', region:'uk', cat:['academic'], age:['hs','uni'], with:'solo', weeks:3, cost:3, study:85, stay:'대학 기숙사', ratio:'대학 강의', korean:'현지 연락 담당', summary:'대학 캠퍼스에서 비즈니스·심리학 등 학술 과정을 수강합니다. 과정에 따라 수료증 또는 학점 인정 서류가 발급됩니다.', incl:['수업료','기숙사','캠퍼스 투어','수료 서류']},
+ {id:'c10', title:'미국 대학 캠퍼스 리더십 프로그램', place:'미국 동부', region:'na', cat:['academic','career'], age:['hs'], with:'solo', weeks:2, cost:3, study:70, stay:'대학 기숙사', ratio:'세미나', korean:'인솔자 동행', summary:'토론·케이스 스터디·기업 방문으로 리더십과 진로를 탐색하고, 대학 생활을 미리 경험합니다.', incl:['세미나','기숙사·식사','기업 방문','수료증']},
+ {id:'c11', title:'AI·코딩 프로젝트 부트캠프', place:'영국 런던', region:'uk', cat:['stem'], age:['ms','hs'], with:'solo', weeks:2, cost:3, study:75, stay:'기숙사', ratio:'팀 프로젝트', korean:'인솔자 동행', summary:'팀을 이뤄 AI 앱을 기획·제작하고 마지막 날 발표합니다. 코딩 경험이 없어도 참여할 수 있습니다.', incl:['프로젝트 수업','기숙사','데모데이','수료증']},
+ {id:'c12', title:'싱가포르 STEM & 영어 캠프', place:'싱가포르', region:'sea', cat:['stem','english'], age:['el2','ms'], with:'solo', weeks:2, cost:2, study:65, stay:'호텔 (인솔 동숙)', ratio:'소그룹', korean:'인솔 교사 동행', summary:'과학관·로봇 수업과 영어 수업을 함께. 가까운 거리와 안전한 환경으로 첫 해외 캠프로 많이 고릅니다.', incl:['STEM 수업','영어 수업','숙박·식사','견학']},
+ {id:'c13', title:'호주 가족 영어 & 자연 체험', place:'호주 골드코스트', region:'oce', cat:['english','activity','family'], age:['el1','el2'], with:'parent', weeks:2, cost:3, study:45, stay:'가족 아파트', ratio:'소그룹', korean:'현지 한국인 코디', summary:'아이는 오전 영어 스쿨, 오후는 가족이 함께 서핑·야생동물 체험. 여유 있는 가족 여행형 캠프입니다.', incl:['아이 영어 수업','가족 숙소','가족 액티비티 3회','현지 지원']},
+ {id:'c14', title:'필리핀 집중 영어 스파르타 캠프', place:'필리핀 클락', region:'sea', cat:['english'], age:['el2','ms','hs'], with:'solo', weeks:4, cost:2, study:85, stay:'기숙사', ratio:'1:1 하루 4시간', korean:'한국인 관리 교사', summary:'1:1 수업 비중이 높은 집중 영어 과정. 짧은 기간에 말하기 실력을 끌어올리고 싶은 학생에게 맞습니다.', incl:['1:1·그룹 수업','기숙사·식사','레벨 테스트 2회','생활 관리']}
+];
+
+var CATS = {english:'영어캠프', schooling:'스쿨링', activity:'액티비티', family:'가족 동반', career:'진로·의약대', academic:'대학 서머스쿨', stem:'AI·STEM'};
+var AGES = {el1:'초등 저학년', el2:'초등 고학년', ms:'중학생', hs:'고등학생', uni:'대학생'};
+var WITH = {parent:'부모 동반', solo:'아이 혼자'};
+var DURS = {w1:'1주', w2:'2주', w3:'3~4주', w5:'5주 이상'};
+var REGIONS = {sea:'동남아', uk:'영국', eu:'유럽', na:'미국·캐나다', oce:'호주·뉴질랜드', kr:'국내'};
+var COST = {1:'₩ · 300만원 미만', 2:'₩₩ · 300~600만원', 3:'₩₩₩ · 600만원 이상'};
+var PRESETS = {
+  family:{cat:['family'], with:['parent']},
+  schooling:{cat:['schooling']},
+  activity:{cat:['activity']},
+  career:{cat:['career']},
+  academic:{cat:['academic']},
+  stem:{cat:['stem']}
+};
+
+var state = {cat:[], age:[], with:[], dur:[], reg:[], sort:'rec', preset:null};
+var picked = [];
+try { var s = JSON.parse(localStorage.getItem('camplab-picked') || '[]'); if (Array.isArray(s)) picked = s.filter(function(id){return CAMPS.some(function(c){return c.id===id;});}); } catch(e) {}
+
+function durKey(w){ return w<=1?'w1': w===2?'w2': w<=4?'w3':'w5'; }
+function el(tag, attrs, text){ var e=document.createElement(tag); if(attrs) for(var k in attrs){ if(k==='class') e.className=attrs[k]; else e.setAttribute(k, attrs[k]); } if(text!=null) e.textContent=text; return e; }
+
+function buildChips(hostId, dict, key){
+  var host=document.getElementById(hostId); host.style.display='contents';
+  Object.keys(dict).forEach(function(k){
+    var b=el('button',{type:'button','class':'chip','aria-pressed':'false','data-k':key,'data-v':k}, dict[k]);
+    b.addEventListener('click', function(){
+      var arr=state[key], i=arr.indexOf(k); if(i>-1) arr.splice(i,1); else arr.push(k);
+      state.preset=null; render();
+    });
+    host.appendChild(b);
+  });
+}
+buildChips('f-cat', CATS, 'cat'); buildChips('f-age', AGES, 'age'); buildChips('f-with', WITH, 'with'); buildChips('f-dur', DURS, 'dur'); buildChips('f-reg', REGIONS, 'reg');
+
+function matches(c){
+  if(state.cat.length && !state.cat.every(function(x){return c.cat.indexOf(x)>-1;})) return false;
+  if(state.age.length && !state.age.some(function(x){return c.age.indexOf(x)>-1;})) return false;
+  if(state.with.length && state.with.indexOf(c.with)<0) return false;
+  if(state.dur.length && state.dur.indexOf(durKey(c.weeks))<0) return false;
+  if(state.reg.length && state.reg.indexOf(c.region)<0) return false;
+  return true;
+}
+function sorted(list){
+  var l=list.slice();
+  if(state.sort==='short') l.sort(function(a,b){return a.weeks-b.weeks;});
+  if(state.sort==='cost') l.sort(function(a,b){return a.cost-b.cost;});
+  if(state.sort==='study') l.sort(function(a,b){return b.study-a.study;});
+  if(state.sort==='act') l.sort(function(a,b){return a.study-b.study;});
+  return l;
+}
+
+function card(c){
+  var art=el('article',{'class':'card'});
+  var head=el('div',{'class':'head'}); var tags=el('div',{'class':'tags'});
+  c.cat.forEach(function(k){ tags.appendChild(el('span',{'class':'tag '+(k==='family'?'fam':'cat')}, CATS[k])); });
+  tags.appendChild(el('span',{'class':'tag'}, '예시'));
+  head.appendChild(tags); head.appendChild(el('h3',null,c.title)); head.appendChild(el('span',{'class':'place'}, c.place));
+  art.appendChild(head);
+  var body=el('div',{'class':'body'});
+  var dl=el('dl',{'class':'facts'});
+  [['대상', c.age.map(function(a){return AGES[a];}).join(' · ')],['동반', WITH[c.with]],['기간', c.weeks+'주'],['숙소', c.stay],['비용대', COST[c.cost]],['관리', c.korean]].forEach(function(r){ dl.appendChild(el('dt',null,r[0])); dl.appendChild(el('dd',null,r[1])); });
+  body.appendChild(dl);
+  var mix=el('div',{'class':'mix'}); var lbl=el('div',{'class':'lbl'}); lbl.appendChild(el('span',null,'학습 '+c.study+'%')); lbl.appendChild(el('span',null,'활동 '+(100-c.study)+'%'));
+  var bar=el('div',{'class':'bar','role':'img','aria-label':'학습 '+c.study+'%, 활동 '+(100-c.study)+'%'}); var i1=el('i'); i1.style.width=c.study+'%'; var i2=el('i'); i2.style.width=(100-c.study)+'%'; bar.appendChild(i1); bar.appendChild(i2);
+  mix.appendChild(lbl); mix.appendChild(bar); body.appendChild(mix);
+  body.appendChild(el('p',{'class':'sum'}, c.summary));
+  var det=el('details'); det.appendChild(el('summary',null,'포함 사항 보기')); var ul=el('ul'); c.incl.forEach(function(x){ ul.appendChild(el('li',null,x)); }); det.appendChild(ul); body.appendChild(det);
+  art.appendChild(body);
+  var foot=el('div',{'class':'foot'});
+  var on=picked.indexOf(c.id)>-1;
+  var cb=el('button',{type:'button','class':'btn','aria-pressed':String(on),id:'pick-'+c.id}, on?'✓ 비교함에 담김':'+ 비교함에 담기');
+  cb.addEventListener('click', function(){ togglePick(c.id); });
+  var ask=el('a',{'class':'btn dark',href:'#contact'}, '이 캠프 상담');
+  foot.appendChild(cb); foot.appendChild(ask); art.appendChild(foot);
+  return art;
+}
+
+function togglePick(id){
+  var i=picked.indexOf(id);
+  if(i>-1) picked.splice(i,1);
+  else { if(picked.length>=3){ picked.shift(); } picked.push(id); }
+  try{ localStorage.setItem('camplab-picked', JSON.stringify(picked)); }catch(e){}
+  render();
+}
+
+function render(){
+  document.querySelectorAll('.chip').forEach(function(b){ b.setAttribute('aria-pressed', String(state[b.getAttribute('data-k')].indexOf(b.getAttribute('data-v'))>-1)); });
+  document.querySelectorAll('#quick button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-preset')===state.preset)); });
+  var list=sorted(CAMPS.filter(matches));
+  var grid=document.getElementById('grid'); grid.textContent='';
+  if(!list.length){ var e=el('div',{'class':'empty'}); e.appendChild(el('p',{style:'margin:0 0 12px;font-weight:700'},'조건에 맞는 캠프가 아직 없어요.')); var r=el('button',{type:'button','class':'btn dark'},'조건 초기화'); r.addEventListener('click', reset); e.appendChild(r); e.appendChild(el('p',{style:'margin:12px 0 0;font-size:14px;color:var(--muted)'},'원하시는 조건을 상담으로 알려주시면 맞는 캠프를 찾아 드립니다.')); grid.appendChild(e); }
+  list.forEach(function(c){ grid.appendChild(card(c)); });
+  document.getElementById('count').textContent=list.length;
+  var tray=document.getElementById('tray'), sel=document.getElementById('tray-sel'); sel.textContent='';
+  tray.hidden = picked.length===0;
+  sel.appendChild(el('span',{style:'background:none;padding:4px 0;font-weight:700'}, '비교함 '+picked.length+'/3'));
+  picked.forEach(function(id){ var c=CAMPS.find(function(x){return x.id===id;}); if(c) sel.appendChild(el('span',null,c.title)); });
+  document.getElementById('tray-go').disabled = picked.length<2;
+  document.getElementById('tray-go').textContent = picked.length<2 ? '1개 더 담아주세요' : '비교하기';
+}
+
+function reset(){ state.cat=[];state.age=[];state.with=[];state.dur=[];state.reg=[];state.preset=null; render(); }
+document.getElementById('reset').addEventListener('click', reset);
+document.getElementById('sort').addEventListener('change', function(e){ state.sort=e.target.value; render(); });
+document.querySelectorAll('#quick button').forEach(function(b){
+  b.addEventListener('click', function(){
+    var p=b.getAttribute('data-preset');
+    if(state.preset===p){ reset(); return; }
+    reset(); var pr=PRESETS[p]; for(var k in pr) state[k]=pr[k].slice(); state.preset=p; render();
+    document.getElementById('filters').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+document.getElementById('tray-clear').addEventListener('click', function(){ picked=[]; try{localStorage.removeItem('camplab-picked');}catch(e){} render(); });
+
+var sheet=document.getElementById('sheet');
+function openCompare(){
+  var cs=picked.map(function(id){return CAMPS.find(function(x){return x.id===id;});}).filter(Boolean);
+  var wrap=document.getElementById('cmp'); wrap.textContent='';
+  var t=el('table',{'class':'cmp'}); var th=el('thead'); var hr=el('tr'); hr.appendChild(el('th',null,'항목')); cs.forEach(function(c){ hr.appendChild(el('th',null,c.title)); }); th.appendChild(hr); t.appendChild(th);
+  var tb=el('tbody');
+  var rows=[['분야',function(c){return c.cat.map(function(k){return CATS[k];}).join(' · ');}],['지역',function(c){return c.place;}],['대상',function(c){return c.age.map(function(a){return AGES[a];}).join(' · ');}],['동반',function(c){return WITH[c.with];}],['기간',function(c){return c.weeks+'주';}],['학습 : 활동',function(c){return c.study+' : '+(100-c.study);}],['수업 방식',function(c){return c.ratio;}],['숙소',function(c){return c.stay;}],['관리',function(c){return c.korean;}],['비용대',function(c){return COST[c.cost];}],['포함 사항',function(c){return c.incl.join(', ');}],['한 줄 요약',function(c){return c.summary;}]];
+  rows.forEach(function(r){ var tr=el('tr'); tr.appendChild(el('th',{scope:'row'},r[0])); cs.forEach(function(c){ tr.appendChild(el('td',null,r[1](c))); }); tb.appendChild(tr); });
+  t.appendChild(tb); wrap.appendChild(t);
+  wrap.appendChild(el('p',{style:'font-size:13px;color:var(--muted);margin:12px 0 0'},'예시 데이터입니다. 실제 일정과 비용은 상담 시 안내드립니다.'));
+  sheet.hidden=false; document.getElementById('sheet-close').focus();
+}
+function closeCompare(){ sheet.hidden=true; document.getElementById('tray-go').focus(); }
+document.getElementById('tray-go').addEventListener('click', openCompare);
+document.getElementById('sheet-close').addEventListener('click', closeCompare);
+sheet.addEventListener('click', function(e){ if(e.target===sheet) closeCompare(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !sheet.hidden) closeCompare(); });
+
+document.querySelectorAll('[data-copy]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var t=document.getElementById(b.getAttribute('data-copy'));
+    var done=function(){ b.textContent='복사됨'; setTimeout(function(){ b.textContent='복사'; },1500); };
+    var fb=function(){ var r=document.createRange(); r.selectNodeContents(t); var s=getSelection(); s.removeAllRanges(); s.addRange(r); };
+    try{ navigator.clipboard.writeText(t.textContent).then(done, fb); }catch(e){ fb(); }
+  });
+});
+
+// 링크 끝에 #family, #schooling, #activity, #career, #academic, #stem 을 붙이면 해당 분류로 바로 열립니다.
+var h=(location.hash||'').replace('#','');
+if(PRESETS[h]){ var pr=PRESETS[h]; for(var k in pr) state[k]=pr[k].slice(); state.preset=h; }
+render();
+</script>
+</body>
+</html>
